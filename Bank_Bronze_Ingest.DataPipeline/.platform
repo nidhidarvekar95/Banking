@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Bank_Bronze_Ingest"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "dc72e6f0-2c71-a495-46a1-f4b681d6cab5"
+  }
+}
