@@ -1,0 +1,1600 @@
+table 'Measure Table'
+	lineageTag: bab5cd41-aa3c-4338-976d-0d523548e753
+
+	measure 'Total Transactions' =
+			
+			DISTINCTCOUNT(fact_transactions[transaction_id])
+		formatString: 0
+		displayFolder: Transactions
+		lineageTag: 9dccc067-4fb5-476a-ad25-fe3e0aaa3308
+
+	measure 'Total Transaction Amount' =
+			
+			SUM(fact_transactions[amount])
+		displayFolder: Transactions
+		lineageTag: cdbe4fdb-2f0d-4d4b-82f8-b73564d1eed9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Transaction Amount' =
+			
+			DIVIDE([Total Transaction Amount], [Total Transactions], 0)
+		displayFolder: Transactions
+		lineageTag: 1004c453-b448-47e1-b7be-3c317727b4af
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Transacting Customers' =
+			
+			DISTINCTCOUNT(fact_transactions[customer_key])
+		formatString: 0
+		displayFolder: Transactions
+		lineageTag: e39669c0-09a9-487b-9b3d-1d7132cc3a40
+
+	measure 'Transacting Accounts' =
+			
+			DISTINCTCOUNT(fact_transactions[account_key])
+		formatString: 0
+		displayFolder: Transactions
+		lineageTag: e452763d-d5b2-4056-9f23-17b3db39bf6f
+
+	measure 'Active Transaction Branches' =
+			
+			DISTINCTCOUNT(fact_transactions[branch_key])
+		formatString: 0
+		displayFolder: Transactions
+		lineageTag: ea3f4d63-8937-4b34-b321-dd0a27d4f2cd
+
+	measure 'Transactions per Customer' =
+			
+			DIVIDE([Total Transactions], [Transacting Customers], 0)
+		displayFolder: Transactions
+		lineageTag: 4849d86a-9f0c-4af5-ad34-89786c2df9ca
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Transactions per Branch' =
+			
+			DIVIDE([Total Transactions], [Active Transaction Branches], 0)
+		displayFolder: Transactions
+		lineageTag: 05968866-b786-4f9b-9735-d253eec2b8eb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Credit Transactions' =
+			
+			CALCULATE(
+			    [Total Transactions],
+			    fact_transactions[direction] = "Credit"
+			)
+		formatString: 0
+		displayFolder: Credit/Debit
+		lineageTag: 26f38ffe-4b9a-44b0-8196-30bd0b02777e
+
+	measure 'Debit Transactions' =
+			
+			CALCULATE(
+			    [Total Transactions],
+			    fact_transactions[direction] = "Debit"
+			)
+		formatString: 0
+		displayFolder: Credit/Debit
+		lineageTag: 9286178f-e3eb-4247-8b24-975b29445d67
+
+	measure 'Credit Amount' =
+			
+			CALCULATE(
+			    [Total Transaction Amount],
+			    fact_transactions[direction] = "Credit"
+			)
+		displayFolder: Credit/Debit
+		lineageTag: c406507e-2ed6-4420-a564-0d029726fc54
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Debit Amount' =
+			
+			CALCULATE(
+			    [Total Transaction Amount],
+			    fact_transactions[direction] = "Debit"
+			)
+		displayFolder: Credit/Debit
+		lineageTag: b3ce84d5-76e1-4e48-b264-077530792a12
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Net Transaction Flow' =
+			
+			[Credit Amount] - [Debit Amount]
+		displayFolder: Credit/Debit
+		lineageTag: 56a366a5-cce5-405a-a3e6-8b09ffe2484b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Credit Share %' =
+			
+			DIVIDE([Credit Amount], [Total Transaction Amount], 0)
+		displayFolder: Credit/Debit
+		lineageTag: 0ec70277-ae54-4fb7-9bf4-9360d45c4e51
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Fraud Transaction Count' =
+			
+			CALCULATE(
+			    COUNTROWS(fact_transactions),
+			    fact_transactions[is_fraud_label] = 1
+			)
+		formatString: 0
+		displayFolder: Fraud
+		lineageTag: 3a6b7190-3175-4bea-9575-3aaa0e650876
+
+	measure 'Non Fraud Transactions' =
+			
+			[Total Transactions] - [Fraud Transaction Count]
+		formatString: 0
+		displayFolder: Fraud
+		lineageTag: 087ffb33-b66c-4dfa-a8f5-3149dcc961f7
+
+	measure 'Fraud Amount' = ```
+			
+			CALCULATE(
+			    SUM(fact_transactions[amount]),
+			    fact_transactions[is_fraud_label] = 1
+			)
+			
+			// Fraud Amount = 
+			// CALCULATE(
+			//     [Total Transaction Amount],
+			//     fact_transactions[is_fraud_label] = 1
+			// )
+			```
+		displayFolder: Fraud
+		lineageTag: c9869389-b05d-4ef1-8f07-35e9f7dd449e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Fraud Rate %' =
+			
+			DIVIDE([Fraud Transaction Count], [Total Transactions], 0)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Executive Summary
+		lineageTag: 12217de5-7f19-46d3-afb3-c8b655e424bb
+
+	measure 'Fraud Amount %' =
+			
+			DIVIDE([Fraud Amount], [Total Transaction Amount], 0)
+		displayFolder: Fraud
+		lineageTag: cebf52a3-2c07-415a-b932-a02317691c55
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Fraud Amount' =
+			
+			DIVIDE([Fraud Amount], [Fraud Transaction Count], 0)
+		displayFolder: Fraud
+		lineageTag: 183e86f7-1dcc-432e-8ec9-8abe9e363648
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'High Value Transactions' =
+			
+			CALCULATE(
+			    [Total Transactions],
+			    FILTER(
+			        fact_transactions,
+			        fact_transactions[amount] >= 100000
+			    )
+			)
+		formatString: 0
+		displayFolder: High Value Transc
+		lineageTag: d7dce191-89d0-4547-b63d-46f352214247
+
+	measure 'High Value Transaction Amount' =
+			
+			CALCULATE(
+			    [Total Transaction Amount],
+			    FILTER(
+			        fact_transactions,
+			        fact_transactions[amount] >= 100000
+			    )
+			)
+		displayFolder: High Value Transc
+		lineageTag: 9c3fa3c4-e303-4d89-8ce4-3f42b8aa00ab
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'High Value Fraud Transactions' =
+			
+			CALCULATE(
+			    [Total Transactions],
+			    FILTER(
+			        fact_transactions,
+			        fact_transactions[amount] >= 100000 &&
+			        fact_transactions[is_fraud_label] = 1
+			    )
+			)
+		formatString: 0
+		displayFolder: High Value Transc
+		lineageTag: 9fdaf54f-2660-46ef-bbfe-b7360d19660f
+
+	measure 'Unique Counterparties' =
+			
+			DISTINCTCOUNT(fact_transactions[counterparty])
+		formatString: 0
+		displayFolder: Merchant
+		lineageTag: 4b3ae236-d37b-4813-a3d7-5ab2f1c9cbc1
+
+	measure 'Unique Merchant Categories' =
+			
+			DISTINCTCOUNT(fact_transactions[merchant_category])
+		formatString: 0
+		displayFolder: Merchant
+		lineageTag: e84fcfd1-155d-4a18-b12d-e0b4bf549b11
+
+	measure 'Average Amount per Counterparty' =
+			
+			DIVIDE([Total Transaction Amount], [Unique Counterparties], 0)
+		displayFolder: Merchant
+		lineageTag: 9713e746-3926-4168-a9d6-341fcd4da36b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Loans' =
+			
+			CALCULATE(
+			    COUNTROWS(fact_loans),
+			    TREATAS(VALUES(dim_date[Date_Key]), fact_loans[date_key])
+			)
+		formatString: 0
+		displayFolder: 2nd Page
+		lineageTag: 2c1facde-6eaf-4598-80d9-35f3ed68a7e7
+
+	measure 'Loan Customers' =
+			
+			DISTINCTCOUNT(fact_loans[customer_key])
+		formatString: 0
+		displayFolder: Loan
+		lineageTag: 02cd5bcd-4665-49e1-8527-bcc4a9c7975a
+
+	measure 'Loan Branches' =
+			
+			DISTINCTCOUNT(fact_loans[branch_key])
+		formatString: 0
+		displayFolder: Loan
+		lineageTag: 003a93af-08ac-42ba-890b-e2b346d05b8d
+
+	measure 'Total Principal Disbursed' =
+			
+			SUM(fact_loans[principal_amount])
+		displayFolder: Loan
+		lineageTag: 1ff7034e-e26e-4643-b2dc-489b6802b1cd
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Loan Size' =
+			
+			DIVIDE([Total Loan Exposure], [Total Loans], 0)
+		displayFolder: 2nd Page
+		lineageTag: ea2dcdcb-96cd-4697-b985-5e3e18b924b1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Loan Tenure' =
+			
+			CALCULATE(
+			    AVERAGE(fact_loans[tenure_months]),
+			    TREATAS(VALUES(dim_date[Date_Key]), fact_loans[date_key])
+			)
+		displayFolder: 2nd Page
+		lineageTag: 2fbadf7a-79d1-4245-b32d-0e733b7125d6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Interest Rate' =
+			
+			var a = CALCULATE(
+			    AVERAGE(fact_loans[interest_rate_apr]),
+			    TREATAS(VALUES(dim_date[Date_Key]), fact_loans[date_key])
+			)
+			RETURN
+			DIVIDE(
+			    a,
+			    100
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 2nd Page
+		lineageTag: a0352fc3-557a-4b66-ab98-72c3f7dc191f
+
+	measure 'Weighted Avg APR' =
+			
+			DIVIDE(
+			    SUMX(
+			        fact_loans,
+			        fact_loans[principal_amount] * fact_loans[interest_rate_apr]
+			    ),
+			    [Total Principal Disbursed],
+			    0
+			)
+		displayFolder: Loan
+		lineageTag: 09f35d7c-5d48-4a27-b6d6-371b30494f04
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Active Loans' =
+			
+			CALCULATE(
+			    [Total Loans],
+			    fact_loans[status] = "Active"
+			)
+		formatString: 0
+		displayFolder: Loan Status
+		lineageTag: 3d006ad2-10de-44cf-8689-f420c173592c
+
+	measure 'Closed Loans' =
+			
+			CALCULATE(
+			    [Total Loans],
+			    fact_loans[status] = "Closed"
+			)
+		formatString: 0
+		displayFolder: Loan Status
+		lineageTag: 2b0780b0-2b37-45f0-9ee2-54df12435ce4
+
+	measure 'Active Loan %' =
+			
+			DIVIDE([Active Loans], [Total Loans], 0)
+		displayFolder: Loan Status
+		lineageTag: b000e608-89e3-4b9d-bc76-cb17e459823b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Closed Loan %' =
+			
+			DIVIDE([Closed Loans], [Total Loans], 0)
+		displayFolder: Loan Status
+		lineageTag: 848d94e5-dd46-4fa8-a81e-a1c85ea67a65
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Loans per Loan Customer' =
+			
+			DIVIDE([Total Loans], [Loan Customers], 0)
+		displayFolder: Customers(Loan/Transc)
+		lineageTag: 5a2396e4-9887-4c98-80f7-bdf9a6514921
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Principal per Loan Customer' =
+			
+			DIVIDE([Total Principal Disbursed], [Loan Customers], 0)
+		displayFolder: Customers(Loan/Transc)
+		lineageTag: 41990508-08fb-4c80-927f-b0a06dcd2c04
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Payments' =
+			
+			DISTINCTCOUNT(fact_loan_payments[payment_id])
+		formatString: 0
+		displayFolder: Loan payment / repayment
+		lineageTag: 37b0241a-436a-4b84-8ec4-3142d4c4d6f7
+
+	measure 'Total Payment Amount' =
+			
+			
+			CALCULATE(
+			    SUM(fact_loan_payments[payment_amount]),
+			    TREATAS(VALUES(dim_date[Date_Key]), fact_loan_payments[date_key])
+			)
+		displayFolder: Executive Summary
+		lineageTag: b3151dce-b5ca-419a-ab46-3390700bcab2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Payment Amount' =
+			
+			DIVIDE([Total Payment Amount], [Total Payments], 0)
+		displayFolder: Loan payment / repayment
+		lineageTag: 9b9ef447-0e1c-4dbc-809d-c5a54cfd33a8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Paying Customers' =
+			
+			DISTINCTCOUNT(fact_loan_payments[customer_key])
+		formatString: 0
+		displayFolder: Loan payment / repayment
+		lineageTag: 56e89a9c-4e14-410f-bbc3-ef25f734882f
+
+	measure 'Loans With Payments' =
+			
+			DISTINCTCOUNT(fact_loan_payments[loan_key])
+		formatString: 0
+		displayFolder: Loan payment / repayment
+		lineageTag: 1cefbf92-2c95-43d8-a2d9-59a71b0518c4
+
+	measure 'Payment Branches' =
+			
+			DISTINCTCOUNT(fact_loan_payments[branch_key])
+		formatString: 0
+		displayFolder: Loan payment / repayment
+		lineageTag: dd6eed75-6676-48d3-9538-218bea2dd274
+
+	measure 'Payments per Loan' =
+			
+			DIVIDE([Total Payments], [Loans With Payments], 0)
+		displayFolder: Loan payment / repayment
+		lineageTag: 602bdb01-2c5f-452b-a638-698c079b7961
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Payment Amount per Loan' =
+			
+			DIVIDE([Total Payment Amount], [Loans With Payments], 0)
+		displayFolder: Loan payment / repayment
+		lineageTag: a1487e72-72f6-4361-95c6-a9eb34acfd43
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Successful Payments' =
+			
+			CALCULATE(
+			    [Total Payments],
+			    fact_loan_payments[status] = "Success"
+			)
+		formatString: 0
+		displayFolder: Payment status
+		lineageTag: ad07863a-8d47-4f33-8377-430242eca076
+
+	measure 'Failed Payments' =
+			
+			CALCULATE(
+			    [Total Payments],
+			    fact_loan_payments[status] = "Failed"
+			)
+		formatString: 0
+		displayFolder: Payment status
+		lineageTag: b2da78de-2ab9-4cca-a73c-e53204700efa
+
+	measure 'Payment Success Rate %' =
+			
+			DIVIDE([Successful Payments], [Total Payments], 0)
+		displayFolder: Payment status
+		lineageTag: a1f41137-54e4-4e48-a315-90126302dff3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Payment Failure Rate %' =
+			
+			DIVIDE([Failed Payments], [Total Payments], 0)
+		displayFolder: Payment status
+		lineageTag: 42055ab6-2309-431e-99ab-b27c786f9bb4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Repayment to Disbursement %' =
+			
+			DIVIDE([Total Payment Amount], [Total Principal Disbursed], 0)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Repayment coverage
+		lineageTag: 6a8c0359-16f2-4de3-8e2c-ccc93c6e49a8
+
+	measure 'Loans With No Payments' =
+			
+			[Total Loans] - [Loans With Payments]
+		formatString: 0
+		displayFolder: Repayment coverage
+		lineageTag: ceb32e85-d0ad-46d5-9d2a-45c357ebb2aa
+
+	measure 'Loan Payment Penetration %' =
+			
+			DIVIDE([Loans With Payments], [Total Loans], 0)
+		displayFolder: Repayment coverage
+		lineageTag: e60141f5-2470-4fd9-a8d8-c1c4b94772a4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Customers With Both Loans and Transactions' =
+			
+			COUNTROWS(
+			    INTERSECT(
+			        VALUES(fact_loans[customer_key]),
+			        VALUES(fact_transactions[customer_key])
+			    )
+			)
+		formatString: 0
+		displayFolder: Customers(Loan/Transc)
+		lineageTag: 71838f80-3450-4ea0-a5b4-b81e195d5bed
+
+	measure 'Loan Customers Doing Transactions %' =
+			
+			DIVIDE([Customers With Both Loans and Transactions], [Loan Customers], 0)
+		displayFolder: Customers(Loan/Transc)
+		lineageTag: a65a2f7e-0196-408f-a7c5-d170ca560c11
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Transaction Customers With Loans %' =
+			
+			DIVIDE([Customers With Both Loans and Transactions], [Transacting Customers], 0)
+		displayFolder: Customers(Loan/Transc)
+		lineageTag: 0bff167a-ae28-4e4a-bf20-ec52693b1040
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Transaction Only Customers' =
+			
+			[Transacting Customers] - [Customers With Both Loans and Transactions]
+		formatString: 0
+		displayFolder: Customers(Loan/Transc)
+		lineageTag: b91e96b8-5c5d-4871-ac00-13b5e58bde53
+
+	measure 'Loan Only Customers' =
+			
+			[Loan Customers] - [Customers With Both Loans and Transactions]
+		formatString: 0
+		displayFolder: Customers(Loan/Transc)
+		lineageTag: 2b3c9bab-7a01-4963-a1ed-bac219705681
+
+	measure 'Transaction Share %' =
+			
+			DIVIDE(
+			    [Total Transactions],
+			    CALCULATE([Total Transactions], ALL(dim_branch)),
+			    0
+			)
+		displayFolder: Branch
+		lineageTag: 1f4900f2-88a1-4849-b066-2df17ab38110
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Transaction Amount Share %' =
+			
+			DIVIDE(
+			    [Total Transaction Amount],
+			    CALCULATE([Total Transaction Amount], ALL(dim_branch)),
+			    0
+			)
+		displayFolder: Branch
+		lineageTag: cbafa356-4e73-468c-ac28-1402a150e0d4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Loan Share %' =
+			
+			DIVIDE(
+			    [Total Loans],
+			    CALCULATE([Total Loans], ALL(dim_branch)),
+			    0
+			)
+		displayFolder: 2nd Page
+		lineageTag: ce3e28a1-d496-46fd-87ee-597096553629
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Principal Share %' =
+			
+			DIVIDE(
+			    [Total Principal Disbursed],
+			    CALCULATE([Total Principal Disbursed], ALL(dim_branch)),
+			    0
+			)
+		displayFolder: Branch
+		lineageTag: b225badc-c094-4508-9c5b-85d8a3bf9744
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Payment Share %' =
+			
+			DIVIDE(
+			    [Total Payment Amount],
+			    CALCULATE([Total Payment Amount], ALL(dim_branch)),
+			    0
+			)
+		displayFolder: Branch
+		lineageTag: 3131d49c-9bc6-432f-ad92-73ed80818659
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Fraud Rate by Branch %' =
+			
+			DIVIDE([Fraud Transaction Count], [Total Transactions], 0)
+		displayFolder: Branch
+		lineageTag: 0af9b911-f275-4ef0-86b3-f3bebb2f274d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Transaction Amount MTD' =
+			
+			TOTALMTD([Total Transaction Amount], dim_date[full_date])
+		displayFolder: Transaction Trend
+		lineageTag: 34de0304-f310-4855-9d29-1ae88c582f66
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Transaction Amount YTD' =
+			
+			TOTALYTD([Total Transaction Amount], dim_date[full_date])
+		displayFolder: Transaction Trend
+		lineageTag: 2efaf4b1-7b22-4f46-97c0-c9556ec13f90
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Previous Month Transaction Amount' =
+			
+			CALCULATE(
+			    [Total Transaction Amount],
+			    DATEADD(dim_date[full_date], -1, MONTH)
+			)
+		displayFolder: Transaction Trend
+		lineageTag: 0879bd98-5df7-4078-9282-61947a5ade5d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'MoM Transaction Growth %' =
+			
+			DIVIDE(
+			    [Total Transaction Amount] - [Previous Month Transaction Amount],
+			    [Previous Month Transaction Amount],
+			    0
+			)
+		displayFolder: Transaction Trend
+		lineageTag: b6263bd7-504e-48a5-b9ca-1c42893f81da
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Principal Disbursed MTD' =
+			
+			TOTALMTD([Total Principal Disbursed], dim_date[full_date])
+		displayFolder: Loan disbursement trends
+		lineageTag: f3706e80-3807-4cd7-9c79-5efda977aacb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Principal Disbursed YTD' =
+			
+			TOTALYTD([Total Principal Disbursed], dim_date[full_date])
+		displayFolder: Loan disbursement trends
+		lineageTag: 193a524e-613b-42a6-812a-3d0c4cc4b411
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Previous Month Principal Disbursed' =
+			
+			CALCULATE(
+			    [Total Principal Disbursed],
+			    DATEADD(dim_date[full_date], -1, MONTH)
+			)
+		displayFolder: Loan disbursement trends
+		lineageTag: f206ebfa-80a1-4c48-a890-892f7b9ccda7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'MoM Loan Disbursement Growth %' =
+			
+			DIVIDE(
+			    [Total Principal Disbursed] - [Previous Month Principal Disbursed],
+			    [Previous Month Principal Disbursed],
+			    0
+			)
+		displayFolder: Loan disbursement trends
+		lineageTag: 1b1e38cf-2a4c-49e6-9212-25511f962df8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Payment Amount MTD' =
+			
+			TOTALMTD([Total Payment Amount], dim_date[full_date])
+		displayFolder: Payment trends
+		lineageTag: c4a03f5e-23ba-4daf-9eef-9b7fb039b28a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Payment Amount YTD' =
+			
+			TOTALYTD([Total Payment Amount], dim_date[full_date])
+		displayFolder: Payment trends
+		lineageTag: 65a7e291-fd75-4991-9675-ae503def5fe5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Previous Month Payment Amount' =
+			
+			CALCULATE(
+			    [Total Payment Amount],
+			    DATEADD(dim_date[full_date], -1, MONTH)
+			)
+		displayFolder: Payment trends
+		lineageTag: df536fb5-9f4d-4bda-ab4a-0159b9896845
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'MoM Payment Growth %' =
+			
+			DIVIDE(
+			    [Total Payment Amount] - [Previous Month Payment Amount],
+			    [Previous Month Payment Amount],
+			    0
+			)
+		displayFolder: Payment trends
+		lineageTag: 7b5a4406-6dd7-4582-981b-13139a3d7217
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Deposit Balance' =
+			
+			VAR _DateKey = --MAX(dim_date[full_date])
+			MAX(dim_date[date_key])
+			RETURN
+			CALCULATE(
+			    SUM(fact_daily_balances[end_of_day_balance]),
+			    fact_daily_balances[date_key] = _DateKey
+			)
+		displayFolder: Deposit / balance
+		lineageTag: b99894b8-5c1f-4670-90a3-787aa24a0ec8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Deposit Customers' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			CALCULATE(
+			    DISTINCTCOUNT(fact_daily_balances[customer_key]),
+			    fact_daily_balances[date_key] = _DateKey
+			)
+		formatString: 0
+		displayFolder: Deposit / balance
+		lineageTag: 64654772-69bc-4b5b-84b6-d1e8fbbcbc69
+
+	measure 'Deposit Accounts' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			CALCULATE(
+			    DISTINCTCOUNT(fact_daily_balances[account_key]),
+			    fact_daily_balances[date_key] = _DateKey
+			)
+		formatString: 0
+		displayFolder: Deposit / balance
+		lineageTag: 9d00aa86-ff94-427f-9754-1df73f12cc17
+
+	measure 'Avg Deposit Balance per Customer' =
+			
+			DIVIDE([Total Deposit Balance], [Deposit Customers], 0)
+		displayFolder: Deposit / balance
+		lineageTag: bc07eff0-d299-4a7e-9e35-e393d0d8dbfa
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Deposit Balance per Account' =
+			
+			DIVIDE([Total Deposit Balance], [Deposit Accounts], 0)
+		displayFolder: Deposit / balance
+		lineageTag: 9acf4567-1538-457b-ae5a-2c79776bcdc1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Deposit Branches' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			CALCULATE(
+			    DISTINCTCOUNT(fact_daily_balances[branch_key]),
+			    fact_daily_balances[date_key] = _DateKey
+			)
+		formatString: 0
+		displayFolder: Deposit / balance
+		lineageTag: a6df7649-f883-4433-9568-d399de183b4a
+
+	measure 'Avg Deposit Balance per Branch' =
+			
+			DIVIDE([Total Deposit Balance], [Deposit Branches], 0)
+		displayFolder: Deposit / balance
+		lineageTag: dec6a7d1-0404-4e5a-8704-21173669face
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Portfolio Customers' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			CALCULATE(
+			    DISTINCTCOUNT(fact_customer_daily_portfolio[customer_key]),
+			    fact_customer_daily_portfolio[date_key] = _DateKey
+			)
+		formatString: 0
+		displayFolder: Customer Portfolio
+		lineageTag: fca6dd01-52cd-47e9-8ec6-ba02634094a8
+
+	measure 'Customer Portfolio Balance' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			CALCULATE(
+			    SUM(fact_customer_daily_portfolio[total_balance]),
+			    fact_customer_daily_portfolio[date_key] = _DateKey
+			)
+		displayFolder: Customer Portfolio
+		lineageTag: b0d6b4bc-8069-445f-a298-b0986641c534
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Portfolio Balance per Customer' =
+			
+			DIVIDE([Customer Portfolio Balance], [Portfolio Customers], 0)
+		displayFolder: Customer Portfolio
+		lineageTag: 58a11ba0-d6ad-43e2-8347-53001a4e60da
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Customer Transaction Count Snapshot' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			CALCULATE(
+			    SUM(fact_customer_daily_portfolio[transaction_count]),
+			    fact_customer_daily_portfolio[date_key] = _DateKey
+			)
+		formatString: 0
+		displayFolder: Customer Portfolio
+		lineageTag: 0d4eef76-e1de-4bcd-aaa7-54b9906b6564
+
+	measure 'Customer Transaction Amount Snapshot' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			CALCULATE(
+			    SUM(fact_customer_daily_portfolio[transaction_amount]),
+			    fact_customer_daily_portfolio[date_key] = _DateKey
+			)
+		displayFolder: Customer Portfolio
+		lineageTag: c5708a5c-afcf-44e1-9f5f-e7318d99ec16
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Transactions per Customer' =
+			
+			DIVIDE([Customer Transaction Count Snapshot], [Portfolio Customers], 0)
+		displayFolder: Customer Portfolio
+		lineageTag: a7b3d464-6b35-466e-b047-cee921e7b180
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Transaction Amount per Customer' =
+			
+			DIVIDE([Customer Transaction Amount Snapshot], [Portfolio Customers], 0)
+		displayFolder: Customer Portfolio
+		lineageTag: c67557ef-b75b-440b-9cec-1c67f8653367
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Accounts per Customer Snapshot' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			DIVIDE(
+			    CALCULATE(
+			        SUM(fact_customer_daily_portfolio[account_count]),
+			        fact_customer_daily_portfolio[date_key] = _DateKey
+			    ),
+			    [Portfolio Customers],
+			    0
+			)
+		displayFolder: Customer Portfolio
+		lineageTag: 899691aa-16fa-4d71-8c77-7eeca176acde
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Cards per Customer Snapshot' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			DIVIDE(
+			    CALCULATE(
+			        SUM(fact_customer_daily_portfolio[card_count]),
+			        fact_customer_daily_portfolio[date_key] = _DateKey
+			    ),
+			    [Portfolio Customers],
+			    0
+			)
+		displayFolder: Customer Portfolio
+		lineageTag: 70414b58-390a-4f20-9436-18d27e538fef
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Loans per Customer Snapshot' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			DIVIDE(
+			    CALCULATE(
+			        SUM(fact_customer_daily_portfolio[loan_count]),
+			        fact_customer_daily_portfolio[date_key] = _DateKey
+			    ),
+			    [Portfolio Customers],
+			    0
+			)
+		displayFolder: Customer Portfolio
+		lineageTag: 980d7825-c423-4f0c-a762-ec4e05d4319b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Products per Customer' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			VAR _Products =
+			    CALCULATE(
+			        SUM(fact_customer_daily_portfolio[account_count]) +
+			        SUM(fact_customer_daily_portfolio[card_count]) +
+			        SUM(fact_customer_daily_portfolio[loan_count]),
+			        fact_customer_daily_portfolio[date_key] = _DateKey
+			    )
+			RETURN
+			DIVIDE(_Products, [Portfolio Customers], 0)
+		displayFolder: Customer Portfolio
+		lineageTag: ebee2dfc-bdb8-4911-8596-0e7afb032466
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Customers With Account' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			CALCULATE(
+			    DISTINCTCOUNT(fact_customer_daily_portfolio[customer_key]),
+			    fact_customer_daily_portfolio[date_key] = _DateKey,
+			    fact_customer_daily_portfolio[account_count] > 0
+			)
+		formatString: 0
+		displayFolder: Cross-sell
+		lineageTag: 6aa0a52c-d7b4-4c9d-8b70-3933ec189997
+
+	measure 'Customers With Card' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			CALCULATE(
+			    DISTINCTCOUNT(fact_customer_daily_portfolio[customer_key]),
+			    fact_customer_daily_portfolio[date_key] = _DateKey,
+			    fact_customer_daily_portfolio[card_count] > 0
+			)
+		formatString: 0
+		displayFolder: Cross-sell
+		lineageTag: ae939ea1-7682-45e8-a4ab-73e2bec7befe
+
+	measure 'Customers With Loan' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			CALCULATE(
+			    DISTINCTCOUNT(fact_customer_daily_portfolio[customer_key]),
+			    fact_customer_daily_portfolio[date_key] = _DateKey,
+			    fact_customer_daily_portfolio[loan_count] > 0
+			)
+		formatString: 0
+		displayFolder: Cross-sell
+		lineageTag: f39c992f-2de1-4f69-a2c9-a50ce6969ce6
+
+	measure 'Multi Product Customers' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			COUNTROWS(
+			    FILTER(
+			        fact_customer_daily_portfolio,
+			        fact_customer_daily_portfolio[date_key] = _DateKey &&
+			        (
+			            IF(fact_customer_daily_portfolio[account_count] > 0, 1, 0) +
+			            IF(fact_customer_daily_portfolio[card_count] > 0, 1, 0) +
+			            IF(fact_customer_daily_portfolio[loan_count] > 0, 1, 0)
+			        ) >= 2
+			    )
+			)
+		formatString: 0
+		displayFolder: Cross-sell
+		lineageTag: 30d264ea-5813-4261-af93-1494573de353
+
+	measure 'Cross Sell Ratio %' =
+			
+			DIVIDE([Multi Product Customers], [Portfolio Customers], 0)
+		displayFolder: Cross-sell
+		lineageTag: 7c872a0e-dbd3-44fd-a69b-3d6a4af938b5
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Account Penetration %' =
+			
+			DIVIDE([Customers With Account], [Portfolio Customers], 0)
+		displayFolder: Cross-sell
+		lineageTag: 4231e67b-38f9-4ac9-8ae4-54c1a1c64c71
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Card Penetration %' =
+			
+			DIVIDE([Customers With Card], [Portfolio Customers], 0)
+		displayFolder: Cross-sell
+		lineageTag: f9b52b1b-6901-4a0b-a67d-a843cb552e54
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Loan Penetration %' =
+			
+			DIVIDE([Customers With Loan], [Portfolio Customers], 0)
+		displayFolder: Cross-sell
+		lineageTag: 466c000d-403e-45c2-9152-96c6257c02ae
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Customer Fraud Txn Count Snapshot' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			CALCULATE(
+			    SUM(fact_customer_daily_portfolio[fraud_txn_count]),
+			    fact_customer_daily_portfolio[date_key] = _DateKey
+			)
+		formatString: 0
+		displayFolder: Fraud
+		lineageTag: 76817ed1-a24e-4414-b5c4-f48477bb0259
+
+	measure 'Customers With Fraud Activity' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			CALCULATE(
+			    DISTINCTCOUNT(fact_customer_daily_portfolio[customer_key]),
+			    fact_customer_daily_portfolio[date_key] = _DateKey,
+			    fact_customer_daily_portfolio[fraud_txn_count] > 0
+			)
+		formatString: 0
+		displayFolder: Fraud
+		lineageTag: 5796d1fd-1cc3-4857-ab94-3ceef278f6d8
+
+	measure 'Fraud Incidence %' =
+			
+			DIVIDE([Customers With Fraud Activity], [Portfolio Customers], 0)
+		displayFolder: Fraud
+		lineageTag: 2016f5d0-7e05-4244-b68a-4096568479ff
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Fraud Txns per Fraud Customer' =
+			
+			DIVIDE([Customer Fraud Txn Count Snapshot], [Customers With Fraud Activity], 0)
+		displayFolder: Fraud
+		lineageTag: 3fc6cf26-f6d9-42c1-9936-b981848a6a3f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Branch Balance' =
+			
+			CALCULATE(
+			    SUM(fact_daily_balances[end_of_day_balance]),
+			    TREATAS(VALUES(dim_date[Date_Key]), fact_daily_balances[date_key])
+			)
+		displayFolder: Branch
+		lineageTag: a5b72d0d-7b59-4026-842d-55ee55fe571b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Branch Transaction Count' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			CALCULATE(
+			    SUM(fact_branch_daily_summary[transaction_count]),
+			    fact_branch_daily_summary[date_key] = _DateKey
+			)
+		formatString: 0
+		displayFolder: Branch
+		lineageTag: 7cb7851b-fed7-4f80-8232-fbf6d424288c
+
+	measure 'Branch Transaction Amount' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			CALCULATE(
+			    SUM(fact_branch_daily_summary[transaction_amount]),
+			    fact_branch_daily_summary[date_key] = _DateKey
+			)
+		displayFolder: Branch
+		lineageTag: 95244405-2a4b-4779-99d8-806e995d58a3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Branch Loan Count' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			CALCULATE(
+			    SUM(fact_branch_daily_summary[loan_count]),
+			    fact_branch_daily_summary[date_key] = _DateKey
+			)
+		formatString: 0
+		displayFolder: Branch
+		lineageTag: d8867331-5b3d-43fa-bb78-787be8024f59
+
+	measure 'Branch Loan Amount' =
+			
+			CALCULATE(
+			    SUM(fact_loans[principal_amount]),
+			    TREATAS(VALUES(dim_date[Date_Key]), fact_loans[date_key])
+			)
+		displayFolder: Branch
+		lineageTag: d40fb9dd-a696-438b-945e-35d452271d53
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Branch Payment Amount' =
+			
+			CALCULATE(
+			    SUM(fact_loan_payments[payment_amount]),
+			    TREATAS(VALUES(dim_date[Date_Key]), fact_loan_payments[date_key])
+			)
+		displayFolder: Branch
+		lineageTag: 79950d17-d118-4f8f-a2e9-a31d660d8a3e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Branch Fraud Txn Count' =
+			
+			VAR _DateKey = MAX(dim_date[date_key])
+			RETURN
+			CALCULATE(
+			    SUM(fact_branch_daily_summary[fraud_txn_count]),
+			    fact_branch_daily_summary[date_key] = _DateKey
+			)
+		formatString: 0
+		displayFolder: Branch
+		lineageTag: 8bd99e9d-4316-4013-8fbe-cbd7138e06f5
+
+	measure 'Avg Transaction Amount per Branch Txn' =
+			
+			DIVIDE([Branch Transaction Amount], [Branch Transaction Count], 0)
+		displayFolder: Branch
+		lineageTag: 28d9c34f-411d-49a8-ad1b-c09fd06cdd89
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Payment to Loan Principal %' =
+			
+			DIVIDE([Branch Payment Amount], [Branch Loan Amount], 0)
+		displayFolder: Branch
+		lineageTag: bca01802-dddd-43c5-933b-76b5d7d2a1c7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Branch Deposit Share %' =
+			
+			DIVIDE(
+			    [Branch Balance],
+			    CALCULATE([Branch Balance], ALL(dim_branch)),
+			    0
+			)
+		displayFolder: Share Analysis
+		lineageTag: 0eaa9fd4-be6d-40a0-997c-f8a4cd0dc9dc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Branch Transaction Share %' =
+			
+			DIVIDE(
+			    [Branch Transaction Amount],
+			    CALCULATE([Branch Transaction Amount], ALL(dim_branch)),
+			    0
+			)
+		displayFolder: Share Analysis
+		lineageTag: 3743acac-e31e-4b10-a15b-d16c3049f0bb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Branch Loan Share %' =
+			
+			DIVIDE(
+			    [Branch Loan Amount],
+			    CALCULATE([Branch Loan Amount], ALL(dim_branch)),
+			    0
+			)
+		displayFolder: Share Analysis
+		lineageTag: 8766f727-4a3c-49c6-8a8b-10b68fd9602b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Deposit Balance MTD' =
+			
+			TOTALMTD([Total Deposit Balance], dim_date[full_date])
+		displayFolder: Growth
+		lineageTag: 75592642-a29a-4dfb-8b3f-07cce75735b0
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Deposit Balance YTD' =
+			
+			TOTALYTD([Total Deposit Balance], dim_date[full_date])
+		displayFolder: Growth
+		lineageTag: 29e806f9-722f-419f-ac15-1152b8c338d2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Previous Month Deposit Balance' =
+			
+			CALCULATE(
+			    [Total Deposit Balance],
+			    DATEADD(dim_date[full_date], -1, MONTH)
+			)
+		displayFolder: Growth
+		lineageTag: 92fc621f-bad2-4c49-a648-a2374220b912
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'MoM Deposit Growth %' =
+			
+			DIVIDE(
+			    [Total Deposit Balance] - [Previous Month Deposit Balance],
+			    [Previous Month Deposit Balance],
+			    0
+			)
+		displayFolder: Growth
+		lineageTag: 6855a17c-9aa1-47d6-ac50-143e61f63574
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Previous Month Portfolio Balance' =
+			
+			CALCULATE(
+			    [Customer Portfolio Balance],
+			    DATEADD(dim_date[full_date], -1, MONTH)
+			)
+		displayFolder: Growth
+		lineageTag: 2c3bdcf3-27fe-4128-b72a-9a67f787278b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'MoM Portfolio Growth %' =
+			
+			DIVIDE(
+			    [Customer Portfolio Balance] - [Previous Month Portfolio Balance],
+			    [Previous Month Portfolio Balance],
+			    0
+			)
+		displayFolder: Growth
+		lineageTag: 345cb229-bd49-4ba0-8a55-95f8ad031a17
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Loan Amount' =
+			
+			
+			CALCULATE(
+			    SUM(fact_loans[principal_amount]),
+			    TREATAS(VALUES(dim_date[Date_Key]), fact_loans[date_key])
+			)
+		displayFolder: Executive Summary
+		lineageTag: 5df81b30-20d7-4f3c-aa09-faf9af3cd2c3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Loan Rows By Date' =
+			
+			CALCULATE(
+			    COUNTROWS(fact_loans),
+			    USERELATIONSHIP(dim_date[Date_Key], fact_loans[date_key])
+			)
+		formatString: 0
+		lineageTag: 43759e3a-722b-4abf-b81b-b976f26fec24
+
+	measure 'Loan Rows' = COUNTROWS(fact_loans)
+		formatString: 0
+		lineageTag: 12ba4c16-fe19-418e-a18d-ffc3040cf183
+
+	measure 'Total Loan Amount Fixed' =
+			
+			VAR CurrentDateKey = SELECTEDVALUE(dim_date[Date_Key])
+			RETURN
+			CALCULATE(
+			    SUM(fact_loans[principal_amount]),
+			    fact_loans[date_key] = CurrentDateKey
+			)
+		lineageTag: 3be63a62-f9ee-4840-9d23-cd30b6f92d0f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Loan to Payment Ratio' =
+			
+			DIVIDE([Total Payment Amount], [Total Loan Amount], 0)
+		displayFolder: Executive Summary
+		lineageTag: 162146b1-e95d-4dd0-88a8-faaa42fa1b64
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Loan to Balance Ratio' =
+			
+			DIVIDE([Total Loan Amount], [Total Balance], 0)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Executive Summary
+		lineageTag: 8716e34e-5b59-4981-96da-9d0bf8979393
+
+	measure 'Total Balance' =
+			
+			CALCULATE(
+			    SUM(fact_daily_balances[end_of_day_balance]),
+			    TREATAS(VALUES(dim_date[Date_Key]), fact_daily_balances[date_key])
+			)
+		displayFolder: Executive Summary
+		lineageTag: 417dc9ad-a03e-47c0-bd9f-94ade7602895
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Branch Fraud Count' =
+			
+			CALCULATE(
+			    COUNTROWS(fact_transactions),
+			    fact_transactions[is_fraud_label] = 1
+			)
+		formatString: 0
+		lineageTag: f41e21b3-aa8f-4aa2-94a0-5a00fdcaa396
+
+	measure 'Distinct Paid Loans' =
+			
+			CALCULATE(
+			    DISTINCTCOUNT(fact_loan_payments[loan_key]),
+			    TREATAS(VALUES(dim_date[Date_Key]), fact_loan_payments[date_key])
+			)
+		formatString: 0
+		lineageTag: de5e4715-bf40-46a9-8281-89ff80eb6abd
+
+	measure Measure
+		displayFolder: Executive Summary
+		lineageTag: 314f0f9b-afc0-424f-8984-220a2ab5844e
+
+		annotation 43dbc3e8-3a1c-4b6f-9923-b49ff7d6691c = True
+
+	measure 'Loan vs Payment Gap' =
+			
+			[Total Loan Amount] - [Total Payment Amount]
+		displayFolder: Executive Summary
+		lineageTag: 4aa4776f-82e8-4fd9-8790-8c3b6b989c5a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Repayment Coverage %' =
+			
+			DIVIDE([Total Payment Amount], [Total Loan Amount], 0)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Executive Summary
+		lineageTag: f1120f60-4fdd-4a9e-b655-eefc9d08998d
+
+	measure 'Loan to Balance Ratio %' =
+			
+			DIVIDE([Total Loan Amount], [Total Balance], 0)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Executive Summary
+		lineageTag: e72dbfc1-4274-44ac-bb68-beff9acb2859
+
+	measure 'Net Contribution' =
+			
+			[Total Transaction Amount] + [Total Payment Amount] - [Total Loan Amount]
+		displayFolder: Executive Summary
+		lineageTag: 93de6459-7e95-4695-899a-e6900cf71aeb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Segment Risk Score' =
+			
+			([Total Loan Amount] * 0.5)
+			- ([Total Payment Amount] * 0.3)
+			+ ([Fraud Amount] * 0.2)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Executive Summary
+		lineageTag: e9104b39-9b5d-4762-96b7-5279c09f7b83
+
+	measure 'Distinct Borrowers by Bucket' =
+			
+			CALCULATE(
+			    DISTINCTCOUNT(fact_loans[customer_key]),
+			    TREATAS(VALUES(dim_date[Date_Key]), fact_loans[date_key]),
+			    TREATAS(VALUES(dim_customer[customer_key]), fact_loans[customer_key])
+			)
+		formatString: 0
+		displayFolder: 2nd Page
+		lineageTag: 8ca4e6c1-46ca-47a4-8f62-db3c900977b7
+
+	measure 'Total Loan Exposure' =
+			
+			CALCULATE(
+			    SUM(fact_loans[principal_amount]),
+			    TREATAS(VALUES(dim_date[Date_Key]), fact_loans[date_key])
+			)
+		displayFolder: 2nd Page
+		lineageTag: 958eeadc-a992-44e7-a46e-dde7963b3d82
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Loan per Customer' =
+			
+			DIVIDE([Total Loan Exposure], [Distinct Borrowers by Bucket], 0)
+		displayFolder: 2nd Page
+		lineageTag: d94b0183-eb8c-4aeb-96f8-b0deb021d881
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Borrower Share %' =
+			
+			DIVIDE(
+			    [Distinct Borrowers by Bucket],
+			    CALCULATE(
+			        [Distinct Borrowers by Bucket],
+			        ALL(dim_customer[segment])
+			    ),
+			    0
+			)
+		displayFolder: 2nd Page
+		lineageTag: b78baa39-cb60-4bd5-9329-24c068843ec2
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Loan Growth %' =
+			
+			DIVIDE(
+			    [Total Loan Exposure] - [Previous Period Loan Exposure],
+			    [Previous Period Loan Exposure],
+			    0
+			)
+		displayFolder: 2nd Page
+		lineageTag: 9d48e730-6651-4c29-ae42-b89c813bfee0
+
+	measure 'Previous Period Loan Exposure' =
+			
+			CALCULATE(
+			    [Total Loan Exposure],
+			    DATEADD(dim_date[Date], -1, MONTH)
+			)
+		displayFolder: 2nd Page
+		lineageTag: 48eadab1-9514-4873-9644-20ec7bd9d246
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'NPA %' =
+			
+			DIVIDE(
+			    CALCULATE(
+			        COUNTROWS(fact_loans),
+			        fact_loans[status] = "NPA"
+			    ),
+			    [Total Loans],
+			    0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 2nd Page
+		lineageTag: f5211e0b-979a-4966-9261-8d0ddfbe440b
+
+	measure 'Total Loan Exposure by Segment' =
+			
+			CALCULATE(
+			    SUM(fact_loans[principal_amount]),
+			    TREATAS(VALUES(dim_date[Date_Key]), fact_loans[date_key]),
+			    TREATAS(VALUES(dim_customer[customer_key]), fact_loans[customer_key])
+			)
+		displayFolder: 2nd Page
+		lineageTag: 371457b5-74a3-478c-9641-87009c413ea7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Loans by Segment' =
+			
+			CALCULATE(
+			    COUNTROWS(fact_loans),
+			    TREATAS(VALUES(dim_date[Date_Key]), fact_loans[date_key]),
+			    TREATAS(VALUES(dim_customer[customer_key]), fact_loans[customer_key])
+			)
+		formatString: 0
+		displayFolder: 2nd Page
+		lineageTag: 4b4e9271-5fa3-4f05-8bb7-f9c95578912a
+
+	measure 'Top 10 Customers %' =
+			
+			DIVIDE(
+			    CALCULATE(
+			        [Total Loan Exposure],
+			        TOPN(10, VALUES(dim_customer[customer_id]), [Total Loan Exposure])
+			    ),
+			    [Total Loan Exposure],
+			    0
+			)
+		displayFolder: 2nd Page
+		lineageTag: c231571a-ca99-4be0-9550-e920eeb93ae6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Loan Bucket' =
+			
+			SWITCH(
+			    TRUE(),
+			    [Total Loan Exposure by Segment] < 7500000, "Small",
+			    [Total Loan Exposure by Segment] < 9900000, "Medium",
+			    [Total Loan Exposure by Segment] < 15000000, "Large",
+			    "High Value"
+			)
+		displayFolder: 2nd Page
+		lineageTag: effdddee-9db9-49a9-ad06-2f0e54139030
+
+	measure 'Customers per Bucket' =
+			
+			CALCULATE(
+			    DISTINCTCOUNT(fact_loans[customer_key]),
+			    TREATAS(VALUES(dim_date[Date_Key]), fact_loans[date_key])
+			)
+		formatString: 0
+		displayFolder: 2nd Page
+		lineageTag: d05d7887-3337-429b-b630-c11bbe43ad9c
+
+	measure 'Total Loan Exposure by Segment & Bucket' =
+			
+			CALCULATE(
+			    SUM(fact_loans[principal_amount]),
+			    TREATAS(VALUES(dim_date[Date_Key]), fact_loans[date_key]),
+			    TREATAS(VALUES(dim_customer[customer_key]), fact_loans[customer_key])
+			)
+		displayFolder: 2nd Page
+		lineageTag: b9494ced-9043-49a0-beed-e673f439c2cf
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Distinct Borrowers by Segment & Bucket' =
+			
+			CALCULATE(
+			    DISTINCTCOUNT(fact_loans[customer_key]),
+			    TREATAS(VALUES(dim_date[Date_Key]), fact_loans[date_key]),
+			    TREATAS(VALUES(dim_customer[customer_key]), fact_loans[customer_key])
+			)
+		formatString: 0
+		displayFolder: 2nd Page
+		lineageTag: f515e31e-344c-4951-9951-116455863952
+
+	measure 'Exposure %' =
+			
+			DIVIDE(
+			    [Total Loan Exposure by Segment & Bucket],
+			    [Total Loan Exposure],
+			    0
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 2nd Page
+		lineageTag: 58060bba-a483-4626-b055-5ba3bc1184cf
+
+	measure 'Borrower %' = ```
+			
+			var a= 
+			CALCULATE(
+			    DISTINCTCOUNT(fact_loans[customer_key]),
+			    TREATAS(VALUES(dim_date[Date_Key]), fact_loans[date_key]))
+			
+			    RETURN
+			DIVIDE(
+			    [Distinct Borrowers by Bucket],
+			    a,
+			    0
+			) 
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 2nd Page
+		lineageTag: dc62377d-d233-4e20-a6dd-252427ece2f8
+
+	column Value
+		formatString: 0
+		lineageTag: 1acdaaaa-39df-4504-b2e7-a82674708734
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Measure Table' = calculated
+		mode: import
+		source = {1}
+
+	annotation PBI_Id = ed4f6943f5b646709097b6e4b5ea008e
+

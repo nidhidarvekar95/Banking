@@ -1,0 +1,62 @@
+relationship e26e3ed5-8425-13d7-f2ab-b760a17edabd
+	fromColumn: fact_transactions.date_key
+	toColumn: dim_date.Date_Key
+
+relationship 5c90ce2e-1ce3-9b2b-5e6a-c5d95970d261
+	isActive: false
+	fromColumn: dim_date.Date_Key
+	toColumn: fact_loan_payments.date_key
+
+relationship 04836c57-7a82-ee07-e0c4-ca1bc036fdd8
+	isActive: false
+	fromColumn: dim_date.Date_Key
+	toColumn: fact_daily_balances.date_key
+
+relationship 583b943c-419e-4241-1b0f-245f0086c7fe
+	fromColumn: fact_transactions.customer_key
+	toColumn: dim_customer.customer_key
+
+relationship 44dc1d9f-aa63-c282-5d63-c6dbdf33e675
+	fromColumn: fact_transactions.branch_key
+	toColumn: dim_branch.branch_key
+
+relationship 9b02a4a2-3592-c975-d1af-5866c00f3e7a
+	fromColumn: fact_daily_balances.account_key
+	toColumn: dim_account.account_key
+
+relationship b65a9dcc-19c0-8288-7d09-31bf02383ee4
+	fromColumn: fact_transactions.account_key
+	toColumn: dim_account.account_key
+
+relationship 69fb5e1f-333c-39e6-7b1d-ee1c3cef4561
+	fromColumn: fact_transactions.channel_key
+	toColumn: dim_channel.channel_key
+
+relationship 708f5c8b-f486-e3a7-5c08-9daea2dab888
+	fromColumn: fact_transactions.txn_type_key
+	toColumn: dim_txn_type.txn_type_key
+
+relationship 69f2aef4-44a3-30ed-b99c-052e77d97586
+	fromColumn: fact_daily_balances.branch_key
+	toColumn: dim_branch.branch_key
+
+relationship cdba435a-cc04-6e85-a9c2-d1595aabeddd
+	fromColumn: fact_loans.branch_key
+	toColumn: dim_branch.branch_key
+
+relationship c8bdb7de-e6fd-a1ba-2497-e18cee9505d6
+	fromColumn: fact_loan_payments.loan_key
+	toColumn: dim_loan.loan_key
+
+relationship 94f19bde-718f-68b4-22f5-4cfb94223138
+	fromColumn: fact_loans.loan_key
+	toColumn: dim_loan.loan_key
+
+relationship 9e0379d5-c6d6-ce0e-4deb-88e5e24f1ee1
+	fromColumn: fact_loans.date_key
+	toColumn: dim_date.Date_Key
+
+relationship 41302cdb-acd3-17f0-e8b6-aa8a2e82f234
+	fromColumn: fact_loan_payments.branch_key
+	toColumn: dim_branch.branch_key
+

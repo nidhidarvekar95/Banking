@@ -1,0 +1,97 @@
+table dim_card
+	lineageTag: f85949e1-1630-47a8-b134-aac6bf95f971
+	sourceLineageTag: [dbo].[dim_card]
+
+	column card_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 57830a2b-0de2-450c-aeff-bebe52afbcff
+		sourceLineageTag: card_key
+		summarizeBy: sum
+		sourceColumn: card_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column card_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 3da2701b-bd61-4596-8f1d-28670dfc247a
+		sourceLineageTag: card_id
+		summarizeBy: none
+		sourceColumn: card_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: e759bd57-e0bb-4e13-951d-8fd7b5356784
+		sourceLineageTag: customer_id
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column linked_account_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: a97f0878-3143-43f5-8449-c82c84e4280c
+		sourceLineageTag: linked_account_id
+		summarizeBy: none
+		sourceColumn: linked_account_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column card_type
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: f23aa1b7-fa55-410e-ba18-84a5945b3bb9
+		sourceLineageTag: card_type
+		summarizeBy: none
+		sourceColumn: card_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 7cdaa6ee-b979-490e-a530-5fdb251c0a5e
+		sourceLineageTag: status
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column issued_date
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: aeb9ac83-0232-453f-87bc-afa525746804
+		sourceLineageTag: issued_date
+		summarizeBy: none
+		sourceColumn: issued_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column credit_limit
+		dataType: double
+		sourceProviderType: decimal(18, 2)
+		lineageTag: 13c49fdc-53b9-41f4-927a-b97ea7d96f4a
+		sourceLineageTag: credit_limit
+		summarizeBy: sum
+		sourceColumn: credit_limit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition dim_card = entity
+		mode: directLake
+		source
+			entityName: dim_card
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

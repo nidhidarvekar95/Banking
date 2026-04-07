@@ -1,0 +1,96 @@
+table dim_branch
+	lineageTag: b3c2f0fc-3375-44d0-8ece-3624e7c4fa3c
+	sourceLineageTag: [dbo].[dim_branch]
+
+	column branch_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 116d27c4-3c34-4fe6-ae65-2df7174671ca
+		sourceLineageTag: branch_key
+		summarizeBy: none
+		sourceColumn: branch_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column branch_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 5bfc9506-7d4d-481c-942c-d004e9b89e12
+		sourceLineageTag: branch_id
+		summarizeBy: none
+		sourceColumn: branch_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column branch_name
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: e31a8fb8-b9f3-4daa-997c-f969eb5f527b
+		sourceLineageTag: branch_name
+		summarizeBy: none
+		sourceColumn: branch_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: fe27a996-69cb-4944-afcb-c5c27ba0d432
+		sourceLineageTag: city
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: d1a83a2d-b4ed-4a4b-8859-f5f3afa272e9
+		sourceLineageTag: state
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 35af7921-a19d-4060-a877-dadffb544c8a
+		sourceLineageTag: region
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	column opened_date
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: e636637d-4afd-40a1-b27c-654ffada674f
+		sourceLineageTag: opened_date
+		summarizeBy: none
+		sourceColumn: opened_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_active
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 3e4811e5-ab2a-4309-86a1-24ee6516b863
+		sourceLineageTag: is_active
+		summarizeBy: sum
+		sourceColumn: is_active
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_branch = entity
+		mode: directLake
+		source
+			entityName: dim_branch
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

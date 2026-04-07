@@ -1,0 +1,128 @@
+table dim_account
+	lineageTag: f7d31881-543d-403b-8579-ac9869756a8c
+	sourceLineageTag: [dbo].[dim_account]
+
+	column account_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 813d7181-9367-4542-a7cd-20f4e865f521
+		sourceLineageTag: account_key
+		summarizeBy: none
+		sourceColumn: account_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column account_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 5797bd7f-4741-48e3-96e4-f09925137c3b
+		sourceLineageTag: account_id
+		summarizeBy: none
+		sourceColumn: account_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: d9857eca-2bc1-4a55-a58b-480639b2a23f
+		sourceLineageTag: customer_id
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column branch_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: e9d9793d-1885-4154-b2b4-22e14abc9711
+		sourceLineageTag: branch_id
+		summarizeBy: none
+		sourceColumn: branch_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column account_type
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 8541983d-c993-4c16-aabf-8aacecf86cf3
+		sourceLineageTag: account_type
+		summarizeBy: none
+		sourceColumn: account_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column currency
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 2743b7cc-3c40-44af-a77a-18cec5e56e9d
+		sourceLineageTag: currency
+		summarizeBy: none
+		sourceColumn: currency
+
+		annotation SummarizationSetBy = Automatic
+
+	column open_date
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 6d0d023f-cfc8-4e55-8425-2e8794b0340d
+		sourceLineageTag: open_date
+		summarizeBy: none
+		sourceColumn: open_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 35a6a96c-bcaf-4996-ad6d-73373110c47b
+		sourceLineageTag: status
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column overdraft_limit
+		dataType: double
+		sourceProviderType: decimal(18, 2)
+		lineageTag: ab9ddfa7-35ce-4a8b-a771-96fdaf0e1b45
+		sourceLineageTag: overdraft_limit
+		summarizeBy: sum
+		sourceColumn: overdraft_limit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column record_source
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 2678b8c2-bf09-4c53-b593-1f0030476ad9
+		sourceLineageTag: record_source
+		summarizeBy: none
+		sourceColumn: record_source
+
+		annotation SummarizationSetBy = Automatic
+
+	column load_ts
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: fc8166e2-9051-436f-8183-e1ca621d7ec9
+		sourceLineageTag: load_ts
+		summarizeBy: none
+		sourceColumn: load_ts
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_account = entity
+		mode: directLake
+		source
+			entityName: dim_account
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

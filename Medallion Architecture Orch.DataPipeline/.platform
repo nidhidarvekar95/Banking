@@ -1,11 +1,11 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
   "metadata": {
-    "type": "Notebook",
-    "displayName": "Notebook_Bronze to Silver"
+    "type": "DataPipeline",
+    "displayName": "Medallion Architecture Orch"
   },
   "config": {
     "version": "2.0",
-    "logicalId": "d7e9f51e-1b24-834b-4913-7bdcfec61f98"
+    "logicalId": "40dc3d0b-cd59-a7f1-4579-ef82b29703fa"
   }
 }

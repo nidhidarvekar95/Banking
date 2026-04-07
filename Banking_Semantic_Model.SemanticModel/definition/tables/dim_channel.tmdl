@@ -1,0 +1,34 @@
+table dim_channel
+	lineageTag: e65bade6-222d-43c9-a677-2139ab794ee5
+	sourceLineageTag: [dbo].[dim_channel]
+
+	column channel_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 7d419e30-d787-407c-a654-70a0ae0c7f1d
+		sourceLineageTag: channel_key
+		summarizeBy: none
+		sourceColumn: channel_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column channel_name
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: c6d7d58a-51fa-4ed3-a26e-96299cb4badc
+		sourceLineageTag: channel_name
+		summarizeBy: none
+		sourceColumn: channel_name
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_channel = entity
+		mode: directLake
+		source
+			entityName: dim_channel
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,82 @@
+table fact_customer_daily_portfolio
+	lineageTag: 55c99879-e4b9-41f1-afe7-75a13e12e43a
+	sourceLineageTag: [dbo].[fact_customer_daily_portfolio]
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: ea6b822c-9649-40e9-b133-8625af86771a
+		sourceLineageTag: customer_key
+		summarizeBy: sum
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 4a2fe7de-1682-44df-89d8-d97caa55bb35
+		sourceLineageTag: date_key
+		summarizeBy: sum
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column loan_count
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: e75d4194-af4a-46b1-a251-69bf21bad170
+		sourceLineageTag: loan_count
+		summarizeBy: sum
+		sourceColumn: loan_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_principal_amount
+		dataType: double
+		sourceProviderType: decimal(28, 2)
+		lineageTag: 90197e29-f6c1-45a8-aea1-a65e7d08db61
+		sourceLineageTag: total_principal_amount
+		summarizeBy: sum
+		sourceColumn: total_principal_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column avg_interest_rate_apr
+		dataType: double
+		sourceProviderType: decimal(14, 8)
+		lineageTag: caee5998-ba05-4d73-95d9-20ef62004ddf
+		sourceLineageTag: avg_interest_rate_apr
+		summarizeBy: sum
+		sourceColumn: avg_interest_rate_apr
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column avg_tenure_months
+		dataType: double
+		sourceProviderType: float
+		lineageTag: c3dadce0-ba17-4097-84e7-121da7d8e3e1
+		sourceLineageTag: avg_tenure_months
+		summarizeBy: sum
+		sourceColumn: avg_tenure_months
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fact_customer_daily_portfolio = entity
+		mode: directLake
+		source
+			entityName: fact_customer_daily_portfolio
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+
