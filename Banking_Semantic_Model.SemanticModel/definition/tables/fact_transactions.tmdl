@@ -1,0 +1,163 @@
+table fact_transactions
+	lineageTag: a83a7efb-d506-44a2-9b31-8a5e8b3b68da
+	sourceLineageTag: [dbo].[fact_transactions]
+
+	column transaction_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 07439d5b-5935-4407-b2e2-cadc1c289827
+		sourceLineageTag: transaction_id
+		summarizeBy: none
+		sourceColumn: transaction_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 40a6ed7e-246c-43a3-926f-3569a97ac421
+		sourceLineageTag: date_key
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 8512cca9-04ef-487f-90e5-cb22675c905c
+		sourceLineageTag: customer_key
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column account_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: ec27c0a9-0852-4960-8803-bdde00173ba3
+		sourceLineageTag: account_key
+		summarizeBy: none
+		sourceColumn: account_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column branch_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 207258a8-8742-4f72-91c7-4ad35133dccb
+		sourceLineageTag: branch_key
+		summarizeBy: none
+		sourceColumn: branch_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column channel_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 167fbab3-af43-4ea4-bdf1-2829e1ecc552
+		sourceLineageTag: channel_key
+		summarizeBy: none
+		sourceColumn: channel_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column transaction_ts
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: f9251ce2-80a5-42df-a966-c73859bb62a6
+		sourceLineageTag: transaction_ts
+		summarizeBy: none
+		sourceColumn: transaction_ts
+
+		annotation SummarizationSetBy = Automatic
+
+	column direction
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: c7f299c7-c617-4cf2-9b16-0fb7ba307361
+		sourceLineageTag: direction
+		summarizeBy: none
+		sourceColumn: direction
+
+		annotation SummarizationSetBy = Automatic
+
+	column amount
+		dataType: double
+		sourceProviderType: decimal(18, 2)
+		lineageTag: 7ecc0cc2-4deb-47c8-b11b-9af8f491bae3
+		sourceLineageTag: amount
+		summarizeBy: sum
+		sourceColumn: amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column currency
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: bee57330-3c07-49da-9461-8700be743045
+		sourceLineageTag: currency
+		summarizeBy: none
+		sourceColumn: currency
+
+		annotation SummarizationSetBy = Automatic
+
+	column merchant_category
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 3dab1bb8-9f43-463c-9692-e2ea1cd5147f
+		sourceLineageTag: merchant_category
+		summarizeBy: none
+		sourceColumn: merchant_category
+
+		annotation SummarizationSetBy = Automatic
+
+	column counterparty
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 6bfeb99e-dd3e-4868-b6a7-0c8f906a21d3
+		sourceLineageTag: counterparty
+		summarizeBy: none
+		sourceColumn: counterparty
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_fraud_label
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 43c799b6-2a63-4c78-9b93-caa822b3a21e
+		sourceLineageTag: is_fraud_label
+		summarizeBy: sum
+		sourceColumn: is_fraud_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column txn_type_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 2460573c-1794-443a-810a-679cddacd7d5
+		sourceLineageTag: txn_type_key
+		summarizeBy: none
+		sourceColumn: txn_type_key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_transactions = entity
+		mode: directLake
+		source
+			entityName: fact_transactions
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,90 @@
+table fact_daily_balances
+	lineageTag: 9013dbb6-30aa-4ff1-92b6-8ffd79bcc661
+	sourceLineageTag: [dbo].[fact_daily_balances]
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: c1ea177c-2f4d-424d-87f6-dd814fb29fe4
+		sourceLineageTag: date_key
+		summarizeBy: sum
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 6860dd9e-3ecf-44ff-8703-400206c33687
+		sourceLineageTag: customer_key
+		summarizeBy: sum
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column account_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: c3878d23-76c5-498b-8e59-8b9828e22e6c
+		sourceLineageTag: account_key
+		summarizeBy: none
+		sourceColumn: account_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column branch_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 1936f461-1a90-4bb1-be75-2e22614d1ce7
+		sourceLineageTag: branch_key
+		summarizeBy: none
+		sourceColumn: branch_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column end_of_day_balance
+		dataType: double
+		sourceProviderType: decimal(18, 2)
+		lineageTag: 8e039948-13a8-4fd7-9908-7a3f8f115e84
+		sourceLineageTag: end_of_day_balance
+		summarizeBy: sum
+		sourceColumn: end_of_day_balance
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column currency
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: dffa2f61-d150-442d-b116-d890cb1251ce
+		sourceLineageTag: currency
+		summarizeBy: none
+		sourceColumn: currency
+
+		annotation SummarizationSetBy = Automatic
+
+	column snapshot_date
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 6c8d845d-f5a6-4059-b027-65d2c4b84280
+		sourceLineageTag: snapshot_date
+		summarizeBy: none
+		sourceColumn: snapshot_date
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_daily_balances = entity
+		mode: directLake
+		source
+			entityName: fact_daily_balances
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

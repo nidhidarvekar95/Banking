@@ -1,0 +1,69 @@
+table fact_branch_daily_summary
+	lineageTag: 9538e85f-91a3-457d-ba79-9d9e0944d24f
+	sourceLineageTag: [dbo].[fact_branch_daily_summary]
+
+	column date_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 6bc6aafa-56fb-4b63-8324-a805c75ddb8d
+		sourceLineageTag: date_key
+		summarizeBy: sum
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column branch_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 1663a0db-3681-4ba8-b09e-add75fb52827
+		sourceLineageTag: branch_key
+		summarizeBy: sum
+		sourceColumn: branch_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_balance
+		dataType: double
+		sourceProviderType: decimal(28, 2)
+		lineageTag: 6fea62ec-c89d-4936-a353-ad9cd1213947
+		sourceLineageTag: total_balance
+		summarizeBy: sum
+		sourceColumn: total_balance
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_accounts
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 32c6fcb9-e066-4f64-a706-2148de900f29
+		sourceLineageTag: total_accounts
+		summarizeBy: sum
+		sourceColumn: total_accounts
+
+		annotation SummarizationSetBy = Automatic
+
+	column total_customers
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 563307b4-d90a-449d-8b7a-027042078109
+		sourceLineageTag: total_customers
+		summarizeBy: sum
+		sourceColumn: total_customers
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_branch_daily_summary = entity
+		mode: directLake
+		source
+			entityName: fact_branch_daily_summary
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,146 @@
+table dim_customer
+	lineageTag: fa1846cc-17e5-45bf-9d44-6508d6d5bd31
+	sourceLineageTag: [dbo].[dim_customer]
+
+	column customer_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 620452d0-4671-47a3-9f07-2be055af6923
+		sourceLineageTag: customer_key
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 09887cb6-5408-449f-ad41-29e1d6ed3827
+		sourceLineageTag: customer_id
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column full_name
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 8b87f621-7d2e-4656-b142-7e43e1309a2a
+		sourceLineageTag: full_name
+		summarizeBy: none
+		sourceColumn: full_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column gender
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 67b18ae2-d570-4de0-b962-9a37f78b5796
+		sourceLineageTag: gender
+		summarizeBy: none
+		sourceColumn: gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column dob
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 9c8bf30f-d265-441f-9ad9-416b4166086a
+		sourceLineageTag: dob
+		summarizeBy: none
+		sourceColumn: dob
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 41d8e421-b3a8-46fd-8722-b9a87f65fdf6
+		sourceLineageTag: city
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: fa092dcc-930e-4e79-9e6a-dae579c21e75
+		sourceLineageTag: state
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column segment
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: cf26ad58-6c29-4a63-909d-461365b6cc0a
+		sourceLineageTag: segment
+		summarizeBy: none
+		sourceColumn: segment
+
+		annotation SummarizationSetBy = Automatic
+
+	column risk_rating
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 437a7356-1d55-4e7d-9f70-7963539f0217
+		sourceLineageTag: risk_rating
+		summarizeBy: none
+		sourceColumn: risk_rating
+
+		annotation SummarizationSetBy = Automatic
+
+	column home_branch_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 88e11fde-de49-40a7-b535-637b3e6f3569
+		sourceLineageTag: home_branch_id
+		summarizeBy: none
+		sourceColumn: home_branch_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column kyc_status
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: edfe72b6-2865-4034-846d-e0b4e6647e60
+		sourceLineageTag: kyc_status
+		summarizeBy: none
+		sourceColumn: kyc_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column record_source
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 51001653-3d8b-4d8f-9c34-d43ccf986ab4
+		sourceLineageTag: record_source
+		summarizeBy: none
+		sourceColumn: record_source
+
+		annotation SummarizationSetBy = Automatic
+
+	column load_ts
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 83111064-44c3-4e49-b030-138a6664a8a1
+		sourceLineageTag: load_ts
+		summarizeBy: none
+		sourceColumn: load_ts
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_customer = entity
+		mode: directLake
+		source
+			entityName: dim_customer
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

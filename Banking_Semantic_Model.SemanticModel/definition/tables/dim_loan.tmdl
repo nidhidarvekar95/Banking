@@ -1,0 +1,120 @@
+table dim_loan
+	lineageTag: 8f58a25e-e6f6-4c87-8292-8086fa88a40e
+	sourceLineageTag: [dbo].[dim_loan]
+
+	column loan_key
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 73b000a5-edb4-4f75-bd9d-6cf06633ddb6
+		sourceLineageTag: loan_key
+		summarizeBy: none
+		sourceColumn: loan_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column loan_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: c7784ce8-5177-40ac-88d3-7ec91e629f5c
+		sourceLineageTag: loan_id
+		summarizeBy: none
+		sourceColumn: loan_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: e45ebbe7-3d9c-41a9-bea5-d32e5ae8c3ad
+		sourceLineageTag: customer_id
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column branch_id
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 70b28710-11a9-4400-a4e7-830681bad990
+		sourceLineageTag: branch_id
+		summarizeBy: none
+		sourceColumn: branch_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column loan_type
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: a0911d50-5420-4214-bb13-75b2125eaad6
+		sourceLineageTag: loan_type
+		summarizeBy: none
+		sourceColumn: loan_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column start_date
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: 968326b8-8fbf-40ff-a268-b3e554100d16
+		sourceLineageTag: start_date
+		summarizeBy: none
+		sourceColumn: start_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column tenure_months
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 81c9de80-4198-4b35-8ddc-8c0e263b5291
+		sourceLineageTag: tenure_months
+		summarizeBy: sum
+		sourceColumn: tenure_months
+
+		annotation SummarizationSetBy = Automatic
+
+	column principal_amount
+		dataType: double
+		sourceProviderType: decimal(18, 2)
+		lineageTag: 4b471cad-f20a-42d8-8f83-50c9dd5fdff9
+		sourceLineageTag: principal_amount
+		summarizeBy: sum
+		sourceColumn: principal_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column interest_rate_apr
+		dataType: double
+		sourceProviderType: float
+		lineageTag: e8342696-c0fd-4bd6-a978-cf44b63f9662
+		sourceLineageTag: interest_rate_apr
+		summarizeBy: sum
+		sourceColumn: interest_rate_apr
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column status
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 361986f5-b6d6-4f21-963e-bc2e436695a1
+		sourceLineageTag: status
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_loan = entity
+		mode: directLake
+		source
+			entityName: dim_loan
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,31 @@
+model Model
+	culture: en-US
+	collation: Latin1_General_100_BIN2_UTF8
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["DatabaseQuery"]
+
+annotation PBI_ProTooling = ["WebModelingEdit"]
+
+ref table dim_account
+ref table dim_branch
+ref table dim_card
+ref table dim_channel
+ref table dim_customer
+ref table dim_date
+ref table dim_loan
+ref table dim_txn_type
+ref table fact_daily_balances
+ref table fact_loan_payments
+ref table fact_loans
+ref table fact_transactions
+ref table 'Measure Table'
+ref table fact_branch_daily_summary
+ref table fact_customer_daily_portfolio
+

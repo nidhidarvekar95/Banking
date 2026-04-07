@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Warehouse",
+    "displayName": "Bank_Gold_Warehouse"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "949d7c0d-cb1c-981a-4fb1-fa9443370c1f"
+  }
+}
