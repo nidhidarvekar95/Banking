@@ -1,0 +1,43 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "6947e3f3f9b1ebb79339",
+  "displayName": "Operations & Branch Performance",
+  "displayOption": "FitToPage",
+  "height": 850,
+  "width": 1300,
+  "objects": {
+    "pageRefresh": [
+      {
+        "properties": {
+          "show": {
+            "expr": {
+              "Literal": {
+                "Value": "true"
+              }
+            }
+          },
+          "refreshType": {
+            "expr": {
+              "Literal": {
+                "Value": "'APR'"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visibility": "HiddenInViewMode",
+  "visualInteractions": [
+    {
+      "source": "929c23dba7a3c06af019",
+      "target": "e59f729d5320ab6fdc0e",
+      "type": "NoFilter"
+    },
+    {
+      "source": "929c23dba7a3c06af019",
+      "target": "56e1561f2624ed176425",
+      "type": "NoFilter"
+    }
+  ]
+}

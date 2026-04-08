@@ -1,0 +1,313 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.8.0/schema.json",
+  "name": "e59f729d5320ab6fdc0e",
+  "position": {
+    "x": 9.556627613140364,
+    "y": 506.50126349643926,
+    "z": 6000,
+    "height": 344.0385940730531,
+    "width": 810.948114600768,
+    "tabOrder": 6000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_branch"
+                    }
+                  },
+                  "Property": "branch_name"
+                }
+              },
+              "queryRef": "dim_branch.branch_name",
+              "nativeQueryRef": "Branch",
+              "displayName": "Branch"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Branch Loan Amount"
+                }
+              },
+              "queryRef": "Measure Table.Branch Loan Amount",
+              "nativeQueryRef": "Loan Amount",
+              "displayName": "Loan Amount"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "fact_daily_balances"
+                        }
+                      },
+                      "Property": "end_of_day_balance"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(fact_daily_balances.end_of_day_balance)",
+              "nativeQueryRef": "Balance",
+              "displayName": "Balance"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Loan Contribution %"
+                }
+              },
+              "queryRef": "Measure Table.Loan Contribution %",
+              "nativeQueryRef": "Loan Contribution %"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Transaction Contribution %"
+                }
+              },
+              "queryRef": "Measure Table.Transaction Contribution %",
+              "nativeQueryRef": "Transaction Contribution %"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Branch Efficiency Score"
+                }
+              },
+              "queryRef": "Measure Table.Branch Efficiency Score",
+              "nativeQueryRef": "Branch Efficiency Score"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Measure Table"
+                  }
+                },
+                "Property": "Branch Loan Amount"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "125.13872335435094D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Measure Table.Loan Contribution %"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "110.70326055461813D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Measure Table.Transaction Contribution %"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "120.92186097256652D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Measure Table.Branch Loan Amount"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "102.55662900292519D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Sum(fact_daily_balances.end_of_day_balance)"
+          }
+        }
+      ],
+      "total": [
+        {
+          "properties": {
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Center'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "983d9346d7b942168b32",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_branch"
+              }
+            },
+            "Property": "branch_name"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "508152723a4745460810",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Measure Table"
+              }
+            },
+            "Property": "Branch Loan Amount"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "aadd23455e0c077acf22",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_daily_balances"
+                  }
+                },
+                "Property": "end_of_day_balance"
+              }
+            },
+            "Function": 0
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "44e31f2e407d8620f41b",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Measure Table"
+              }
+            },
+            "Property": "Loan Contribution %"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "e9d55c7a7619c270b38c",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Measure Table"
+              }
+            },
+            "Property": "Transaction Contribution %"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "4ed202a7e6323a689d1c",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Measure Table"
+              }
+            },
+            "Property": "Branch Efficiency Score"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}
