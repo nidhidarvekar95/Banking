@@ -1,0 +1,31 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "094d2319cdbbf9e712b8",
+  "displayName": "Customer & Loan Analysis",
+  "displayOption": "FitToPage",
+  "height": 850,
+  "width": 1300,
+  "objects": {
+    "pageRefresh": [
+      {
+        "properties": {
+          "show": {
+            "expr": {
+              "Literal": {
+                "Value": "true"
+              }
+            }
+          },
+          "refreshType": {
+            "expr": {
+              "Literal": {
+                "Value": "'APR'"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visibility": "HiddenInViewMode"
+}
