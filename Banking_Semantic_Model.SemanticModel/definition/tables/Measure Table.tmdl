@@ -164,10 +164,9 @@ table 'Measure Table'
 	measure 'Fraud Amount %' =
 			
 			DIVIDE([Fraud Amount], [Total Transaction Amount], 0)
+		formatString: 0.00%;-0.00%;0.00%
 		displayFolder: Fraud
 		lineageTag: cebf52a3-2c07-415a-b932-a02317691c55
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	measure 'Average Fraud Amount' =
 			
@@ -1069,53 +1068,18 @@ table 'Measure Table'
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'Branch Balance' =
+	measure 'Branch Balance' = ```
 			
 			CALCULATE(
 			    SUM(fact_daily_balances[end_of_day_balance]),
 			    TREATAS(VALUES(dim_date[Date_Key]), fact_daily_balances[date_key])
 			)
+			
+			```
 		displayFolder: Branch
 		lineageTag: a5b72d0d-7b59-4026-842d-55ee55fe571b
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
-	measure 'Branch Transaction Count' =
-			
-			VAR _DateKey = MAX(dim_date[date_key])
-			RETURN
-			CALCULATE(
-			    SUM(fact_branch_daily_summary[transaction_count]),
-			    fact_branch_daily_summary[date_key] = _DateKey
-			)
-		formatString: 0
-		displayFolder: Branch
-		lineageTag: 7cb7851b-fed7-4f80-8232-fbf6d424288c
-
-	measure 'Branch Transaction Amount' =
-			
-			VAR _DateKey = MAX(dim_date[date_key])
-			RETURN
-			CALCULATE(
-			    SUM(fact_branch_daily_summary[transaction_amount]),
-			    fact_branch_daily_summary[date_key] = _DateKey
-			)
-		displayFolder: Branch
-		lineageTag: 95244405-2a4b-4779-99d8-806e995d58a3
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
-	measure 'Branch Loan Count' =
-			
-			VAR _DateKey = MAX(dim_date[date_key])
-			RETURN
-			CALCULATE(
-			    SUM(fact_branch_daily_summary[loan_count]),
-			    fact_branch_daily_summary[date_key] = _DateKey
-			)
-		formatString: 0
-		displayFolder: Branch
-		lineageTag: d8867331-5b3d-43fa-bb78-787be8024f59
 
 	measure 'Branch Loan Amount' =
 			
@@ -1139,21 +1103,12 @@ table 'Measure Table'
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
-	measure 'Branch Fraud Txn Count' =
+	measure 'Avg Transactions per Branch' =
 			
-			VAR _DateKey = MAX(dim_date[date_key])
-			RETURN
-			CALCULATE(
-			    SUM(fact_branch_daily_summary[fraud_txn_count]),
-			    fact_branch_daily_summary[date_key] = _DateKey
+			DIVIDE(
+			    [Total Transactions],
+			    DISTINCTCOUNT('dim_branch'[branch_id])
 			)
-		formatString: 0
-		displayFolder: Branch
-		lineageTag: 8bd99e9d-4316-4013-8fbe-cbd7138e06f5
-
-	measure 'Avg Transaction Amount per Branch Txn' =
-			
-			DIVIDE([Branch Transaction Amount], [Branch Transaction Count], 0)
 		displayFolder: Branch
 		lineageTag: 28d9c34f-411d-49a8-ad1b-c09fd06cdd89
 
@@ -1583,6 +1538,108 @@ table 'Measure Table'
 		displayFolder: 2nd Page
 		lineageTag: dc62377d-d233-4e20-a6dd-252427ece2f8
 
+	measure 'Fraud Rate % by Channel' =
+			
+			DIVIDE(
+			    [Fraud Transaction Count],
+			    COUNT('fact_transactions'[transaction_id])
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Fraud
+		lineageTag: 60db2bbe-d37f-452f-8050-e4fb295d9876
+
+	measure 'High Risk Customers Count' =
+			
+			CALCULATE(
+			    DISTINCTCOUNT('dim_customer'[customer_id]),
+			    'fact_transactions'[is_fraud_label] = 1
+			)
+		formatString: 0
+		displayFolder: Fraud
+		lineageTag: 79019b96-b76f-4972-9b8d-ec3ea38c2d24
+
+	measure 'Fraud Loss Amount' =
+			
+			CALCULATE(
+			    SUM('fact_transactions'[amount]),
+			    'fact_transactions'[is_fraud_label] = 1
+			)
+		displayFolder: Fraud
+		lineageTag: 6b088920-2797-4d10-8721-3f4b877f7a42
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Avg Loan Disbursement per Branch' =
+			
+			DIVIDE(
+			    [Branch Loan Amount],
+			    DISTINCTCOUNT('dim_branch'[branch_id])
+			)
+		displayFolder: Branch
+		lineageTag: b0a5dd3a-6128-4c0a-804f-d2f3aca8f518
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Active Customers' =
+			
+			CALCULATE(
+			    DISTINCTCOUNT('dim_customer'[customer_id]),
+			    'dim_branch'[is_active] = 1
+			)
+		formatString: 0
+		displayFolder: Branch
+		lineageTag: d86d0a8c-63c0-4cb0-8402-db79714cdcb7
+
+	measure 'Branch Efficiency Score' =
+			
+			DIVIDE(
+			    [Avg Transactions per Branch],
+			    [Active Customers]
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Branch
+		lineageTag: 5c62adee-f3d1-45e9-b30b-0f8c80a24563
+
+	measure 'Loan Contribution %' =
+			
+			DIVIDE(
+			    [Total Loan Exposure],
+			    CALCULATE(
+			        [Total Loan Exposure],
+			        ALL('dim_branch'[branch_name])
+			    )
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Branch
+		lineageTag: d06facc1-cbb7-4d3c-9518-da2db129b503
+
+	measure 'Transaction Contribution %' =
+			
+			DIVIDE(
+			    [Total Transaction Amount],
+			    CALCULATE(
+			        [Total Transaction Amount],
+			        ALL('dim_branch'[branch_name])
+			    )
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Branch
+		lineageTag: 04f234db-2c0b-4e50-8bff-9fcf3fc671a2
+
+	measure 'Loan to Deposit Ratio' =
+			
+			DIVIDE([Branch Loan Amount], [Branch Balance])
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Branch
+		lineageTag: 6c5b9e0d-2d63-4318-b347-0bfac416361d
+
+	measure 'Loan to Avg Balance Ratio' =
+			
+			DIVIDE([Total Loan Amount], [Branch Balance])
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Branch
+		lineageTag: 049ea766-c47f-48ed-81fe-39e5d5cf2155
+
 	column Value
 		formatString: 0
 		lineageTag: 1acdaaaa-39df-4504-b2e7-a82674708734
@@ -1591,6 +1648,20 @@ table 'Measure Table'
 		sourceColumn: [Value]
 
 		annotation SummarizationSetBy = Automatic
+
+	column 'First Word'
+		type: calculated
+		lineageTag: 96dc2f94-1013-495f-b2cb-12d665983e72
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":"\nVAR BranchText = TRIM(VALUES('dim_branch'[branch_name]) & \"\")\nVAR FirstSpace = FIND(\" \", BranchText & \" \", 1)\nRETURN\nLEFT(BranchText, FirstSpace - 1)"}
+
+		annotation 277cc1b9-af89-4597-8e15-cacc25c0886b = ```
+				You cannot use calculated column to reference Direct Lake table. The model includes the following calculated column, '<oii>Column</oii>', in the table '<oii>Measure Table</oii>', which is not supported. Please remove the calculated column. See https://go.microsoft.com/fwlink/?linkid=2215281 to learn more.
+				
+				```
 
 	partition 'Measure Table' = calculated
 		mode: import
