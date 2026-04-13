@@ -1640,6 +1640,87 @@ table 'Measure Table'
 		displayFolder: Branch
 		lineageTag: 049ea766-c47f-48ed-81fe-39e5d5cf2155
 
+	measure 'Loan Amount PM' =
+			
+			CALCULATE([Total Loan Amount], DATEADD(dim_date[Date], -1, MONTH))
+		displayFolder: Branch
+		lineageTag: 4d5e2d16-9164-4e89-807c-c5ae5c9eb952
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Loan MoM %' =
+			
+			DIVIDE([Total Loan Amount] - [Loan Amount PM], [Loan Amount PM])
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Branch
+		lineageTag: 81ccd5e7-54a5-4133-9fdf-67d49d093665
+
+	measure 'Customer Rank by Exposure' =
+			
+			RANKX(
+			    ALL(dim_customer[full_name]),
+			    [Total Loan Exposure by Segment],
+			    ,
+			    DESC,
+			    DENSE
+			)
+		formatString: 0
+		displayFolder: 2nd Page
+		lineageTag: 4b74b884-3836-4b60-b5ba-70d0056f3246
+
+	measure 'Cumulative Loan Exposure' =
+			
+			VAR CurrentValue = [Total Loan Exposure by Segment]
+			RETURN
+			CALCULATE(
+			    [Total Loan Exposure by Segment],
+			    FILTER(
+			        ALL(dim_customer[full_name]),
+			        [Total Loan Exposure by Segment] >= CurrentValue
+			    )
+			)
+		displayFolder: 2nd Page
+		lineageTag: 6e54f05a-b4fa-4c89-b85c-10b74e2503b8
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Loan Exposure Overall' =
+			
+			CALCULATE(
+			    [Total Loan Exposure by Segment],
+			    ALL(dim_customer[full_name])
+			)
+		displayFolder: 2nd Page
+		lineageTag: 3455e885-d40c-43e6-a709-463af6c75088
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Cumulative Exposure %' =
+			
+			DIVIDE(
+			    [Cumulative Loan Exposure],
+			    [Total Loan Exposure Overall]
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: 2nd Page
+		lineageTag: 9481a678-13f5-40fb-b2ca-05238f7e3611
+
+	measure 'Top 80% Flag' =
+			
+			IF([Cumulative Exposure %] <= 0.8, "Top Contributors", "Others")
+		displayFolder: Branch
+		lineageTag: 4f1ecb7a-ad88-45ae-be38-45100ebc5036
+
+	measure 'Color Flag' =
+			
+			IF(
+			    [Cumulative Exposure %] <= 0.8,
+			    "#2ECC71",   -- Green (Top contributors)
+			    "#D3D3D3"    -- Grey (Others)
+			)
+		displayFolder: Branch
+		lineageTag: dcda1f3c-39cf-4a78-9922-b6bebd0e4f2d
+
 	column Value
 		formatString: 0
 		lineageTag: 1acdaaaa-39df-4504-b2e7-a82674708734
@@ -1657,6 +1738,20 @@ table 'Measure Table'
 		annotation SummarizationSetBy = Automatic
 
 		annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":"\nVAR BranchText = TRIM(VALUES('dim_branch'[branch_name]) & \"\")\nVAR FirstSpace = FIND(\" \", BranchText & \" \", 1)\nRETURN\nLEFT(BranchText, FirstSpace - 1)"}
+
+		annotation 277cc1b9-af89-4597-8e15-cacc25c0886b = ```
+				You cannot use calculated column to reference Direct Lake table. The model includes the following calculated column, '<oii>Column</oii>', in the table '<oii>Measure Table</oii>', which is not supported. Please remove the calculated column. See https://go.microsoft.com/fwlink/?linkid=2215281 to learn more.
+				
+				```
+
+	column 'Loan Bucket Col'
+		type: calculated
+		lineageTag: 1bcc3413-bcd3-464b-ba08-949e4b7f55fc
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":"\nSWITCH(\n    TRUE(),\n    [Total Loan Exposure by Segment] < 7500000, \"Small\",\n    [Total Loan Exposure by Segment] < 9900000, \"Medium\",\n    [Total Loan Exposure by Segment] < 15000000, \"Large\",\n    \"High Value\"\n)"}
 
 		annotation 277cc1b9-af89-4597-8e15-cacc25c0886b = ```
 				You cannot use calculated column to reference Direct Lake table. The model includes the following calculated column, '<oii>Column</oii>', in the table '<oii>Measure Table</oii>', which is not supported. Please remove the calculated column. See https://go.microsoft.com/fwlink/?linkid=2215281 to learn more.
